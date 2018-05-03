@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<br>
+第二页登陆了才能进  用户信息：
+<br>SPRING_SECURITY_CONTEXT.authentication.principal<br>
+name:<label th:text="${#authentication.principal?.name}"></label><br>
+pwd:<label th:text="${#authentication.principal?.pwd}"></label><br>
+authority1:<label th:text="${session.SPRING_SECURITY_CONTEXT.authentication.principal?.authenticationList}"></label><br>
+authority2:<label th:text="${#authentication.principal?.authentications}"></label><br>
+
+用户名:<sec:authentication property="principal.name" />, 欢迎来到主页!<br>
+拥有权限:<sec:authentication property="principal.authentications" /><br>
+是否可用:<sec:authentication property="principal.enabled" /><br>
+未被锁定:<sec:authentication property="principal.accountNonLocked" /><br>
+<sec:authorize ifAnyGranted="admin">您是超级管理员,可看到该信息:(这里可以用逗号分隔，加入多个角色你拥有管理员权限)</sec:authorize><br>
+<sec:authorize url='/test.jsp'>你登陆成功了可以看到: 管理页面</a></sec:authorize>
+
+<sec:authentication property="principal.name" scope="session" var="name"/></br>
+<hr>
+<label th:if="${#authorization.expression('hasAnyRole(''' +'ROLE_admin' + ''')')}">
+    <a href="/user/delete/1">管理员删除用户(细粒度控制方法的权限)</a>
+</label>
+
+
+</body>
+</html>

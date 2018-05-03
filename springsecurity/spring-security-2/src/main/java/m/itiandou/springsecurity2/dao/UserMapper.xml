@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="m.itiandou.springsecurity2.dao.UserMapper">
+    <resultMap id="BaseResultMap" type="m.itiandou.springsecurity2.entity.User">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="pwd" property="pwd" jdbcType="VARCHAR"/>
+        <collection property="authenticationList" ofType="m.itiandou.springsecurity2.entity.Authentication">
+            <id property="id" column="authorityId" jdbcType="INTEGER"></id>
+            <result property="name" column="authorityName" jdbcType="VARCHAR"></result>
+        </collection>
+    </resultMap>
+
+    <select id="getUSer" resultMap="BaseResultMap">
+      SELECT
+      t1.*,
+      t2.`id` authorityId,
+      t2.`name` authorityName
+    FROM
+      users t1,
+      authentication t2,
+      user_authentication t3
+    WHERE t3.`user_id` = t1.`id`
+      AND t2.`id` = t3.`authentication_id`
+      AND t1.`name` = #{name};
+    </select>
+
+    <select id="listUser" resultMap="BaseResultMap">
+      SELECT
+      t1.*,
+      t2.`id` authorityId,
+      t2.`name` authorityName
+    FROM
+      users t1,
+      authentication t2,
+      user_authentication t3
+    WHERE t3.`user_id` = t1.`id`
+      AND t2.`id` = t3.`authentication_id`;
+    </select>
+
+    <delete id="deleteUserById" parameterType="int">
+        DELETE from  users where id=#{id}
+    </delete>
+
+</mapper>
